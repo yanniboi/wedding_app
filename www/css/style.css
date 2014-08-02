@@ -19,8 +19,13 @@
   margin-right: 35px;
 }
 
+html {
+    height: 100%;
+}
+
 body {
   cursor: url('http://ionicframework.com/img/finger.png'), auto;
+    height: 100%;
 }
 .slider {
   height: 100%;
@@ -52,4 +57,10 @@ body {
   text-align: left;
   list-style: decimal;
   margin: 10px 0px;
+}
+
+.rsvp-smiley img {
+    display: block;
+    margin: auto;
+    padding-top: 40px;
 }

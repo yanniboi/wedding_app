@@ -96,6 +96,7 @@ angular.module('rember.controllers', [])
         }
 
         window.localStorage['userName'] = name;
+        window.localStorage['userEmail'] = email;
         $rootScope.show('Please wait.. Registering');
         $rootScope.auth.$createUser(email, password, function (error, user) {
           if (!error) {
@@ -164,13 +165,62 @@ angular.module('rember.controllers', [])
   }
 ])
 
-  .controller('RsvpCtrl', [
-    '$scope', '$rootScope',
-    function ($scope, $rootScope) {
+  .controller('RsvpCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', function ($scope, $rootScope, $firebase, $ionicModal) {        
        $scope.name = window.localStorage['userName']; 
         
-        //$scope.doRsvp = function () {};
+      $ionicModal.fromTemplateUrl('templates/newRsvp.html', function(modal) {
+          $scope.newRsvp = modal;
+      });
+      
+      $scope.doRsvp = function() {
+          $scope.newRsvp.show();
+      };
+      
+      $rootScope.$watch('rsvpStatus', function() {
+          $scope.rsvpStatus = $rootScope.rsvpStatus;
+      });
+      
+      $rootScope.$watch('rsvped', function() {
+          $scope.rsvped = $rootScope.rsvped;
+      });
+
+      
+      
+      
     }])
+
+    .controller('newRsvpCtrl', function($rootScope, $scope, $window, $firebase) {
+        $scope.rsvp = {
+            name: $rootScope.userName,
+            email: $rootScope.userEmail,
+            status: 0
+        };
+
+        $scope.close = function() {
+            $scope.modal.hide();
+        };
+
+        $scope.createNew = function() {
+            var rsvp  = {
+                name: this.rsvp.name,
+                email: this.rsvp.email,
+                status: this.rsvp.status,
+                created: Date.now(),
+                updated: Date.now()
+            };
+            
+            $rootScope.rsvped = window.localStorage['rsvped'] = true;
+            $rootScope.rsvpStatus = window.localStorage['rsvpStatus'] = this.rsvp.status;
+            
+            $scope.modal.hide();
+            //$rootScope.show();
+            $rootScope.show("Please wait... Creating new");
+
+            var bucketListRef = new Firebase($rootScope.baseUrl + 'rsvps');
+            $firebase(bucketListRef).$add(rsvp);
+            $rootScope.hide();
+        };
+    })
 
 .controller('myListCtrl', function($rootScope, $scope, $window, $ionicModal, $firebase) {
   $rootScope.show("Please wait... Processing");

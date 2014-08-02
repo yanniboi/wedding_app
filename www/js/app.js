@@ -11,8 +11,12 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers'])
                 StatusBar.styleDefault();
             }
 
-            $rootScope.userEmail = null;
-            $rootScope.baseUrl = 'https://blinding-fire-5059.firebaseio.com/';
+            $rootScope.userEmail = window.localStorage['userEmail'];
+            $rootScope.userName = window.localStorage['userName'];
+            $rootScope.rsvped = window.localStorage['rsvped'];
+            $rootScope.rsvpStatus = window.localStorage['rsvpStatus'];
+
+            $rootScope.baseUrl = 'https://iona-wedding.firebaseio.com/';
             var authRef = new Firebase($rootScope.baseUrl);
             $rootScope.auth = $firebaseAuth(authRef);
 
