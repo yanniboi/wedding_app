@@ -1,7 +1,11 @@
-angular.module('rember', ['ionic', 'firebase', 'rember.controllers'])
+angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pushnotification'])
 
-    .run(function($ionicPlatform, $rootScope, $firebaseAuth, $firebase, $window, $ionicLoading) {
+    .run(function($ionicPlatform, $rootScope, $firebaseAuth, $firebase, $window, $ionicLoading, PushProcessingService) {
         $ionicPlatform.ready(function() {
+            console.log("yanniboi --------- ionic is ready");
+            // Initialise push notifications.
+            PushProcessingService.initialize();
+                        
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -108,6 +112,15 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers'])
                 'bucket-rsvp': {
                     templateUrl: 'templates/bucket-rsvp.html',
                     controller: 'RsvpCtrl'
+                }
+            }
+        })
+        .state('bucket.map', {
+            url: '/map',
+            views: {
+                'bucket-map': {
+                    templateUrl: 'templates/bucket-map.html',
+                    controller: 'MapCtrl'
                 }
             }
         })

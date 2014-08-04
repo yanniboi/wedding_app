@@ -4,7 +4,8 @@ angular.module('rember.controllers', [])
         $scope.startApp = function() {
             var test = $scope;
             if (this.accessCode == '12345') {
-            $window.location.href = ('#/auth/signup');
+            //$window.location.href = ('#/auth/signup');
+            $state.go('auth.signin');
 
             // Set a flag that we finished the tutorial
             window.localStorage['didTutorial'] = true;
@@ -18,7 +19,8 @@ angular.module('rember.controllers', [])
         // Check if the user already did the tutorial and skip it if so
         if(window.localStorage['didTutorial'] === "true") {
             console.log('Skip intro');
-            $window.location.href = ('#/auth/signin');
+            //$window.location.href = ('#/auth/signin');
+            $state.go('auth.signin');
         }
         else{
             setTimeout(function () {
@@ -77,55 +79,65 @@ angular.module('rember.controllers', [])
             }
         };
     })
-  .controller('SignUpCtrl', [
-    '$scope', '$rootScope', '$firebaseAuth', '$window',
-    function ($scope, $rootScope, $firebaseAuth, $window) {
-      $scope.user = {
-        email: "",
-        password: "",
-        name: ""
-      };
-      $scope.createUser = function () {
-        var name = this.user.name;
-        var email = this.user.email;
-        var password = this.user.password;
- 
-        if (!email || !password) {
-          $rootScope.notify("Please enter valid credentials");
-          return false;
-        }
+    .controller('SignUpCtrl', ['$scope', '$rootScope', '$firebaseAuth', '$firebase', 'PushProcessingService', '$window', function ($scope, $rootScope, $firebaseAuth, $firebase, PushProcessingService, $window) {
+        $scope.user = {
+            email: "",
+            password: "",
+            name: ""
+        };
+        $scope.createUser = function () {
+            var name = this.user.name;
+            var email = this.user.email;
+            var password = this.user.password;
 
-        window.localStorage['userName'] = name;
-        window.localStorage['userEmail'] = email;
-        $rootScope.show('Please wait.. Registering');
-        $rootScope.auth.$createUser(email, password, function (error, user) {
-          if (!error) {
-            $rootScope.hide();
-            $rootScope.userEmail = user.email;
-            $window.location.href = ('#/bucket/rsvp');
-          }
-          else {
-            $rootScope.hide();
-            if (error.code == 'INVALID_EMAIL') {
-              $rootScope.notify('Invalid Email Address');
+            if (!email || !password) {
+                $rootScope.notify("Please enter valid credentials");
+                return false;
             }
-            else if (error.code == 'EMAIL_TAKEN') {
-              $rootScope.notify('Email Address already taken');
+          
+            //register with google GCM server.
+            function gcmSuccessHandler(result) {
+                console.info('NOTIFY  pushNotification.register succeeded.  Result = '+result);
             }
-            else {
-              $rootScope.notify('Oops something went wrong. Please try again later');
+            function gcmErrorHandler(error) {
+                console.error('NOTIFY  '+error);
             }
-          }
-        });
-      }
-    }
-  ])
+
+            window.localStorage['userName'] = name;
+            window.localStorage['userEmail'] = email;
+            $rootScope.show('Please wait.. Registering');
+            $rootScope.auth.$createUser(email, password, function (error, user) {
+                if (!error) {
+                    $rootScope.hide();
+                    $rootScope.userEmail = user.email;
+
+                    // Register Push notifications.
+                    var pushNotification = window.plugins.pushNotification;
+                    pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {"senderID":"980621160609","ecb":"onNotificationGCM"});
+
+                    $window.location.href = ('#/bucket/rsvp');
+                }
+                else {
+                    $rootScope.hide();
+                    if (error.code == 'INVALID_EMAIL') {
+                        $rootScope.notify('Invalid Email Address');
+                    }
+                    else if (error.code == 'EMAIL_TAKEN') {
+                        $rootScope.notify('Email Address already taken');
+                    }
+                    else {
+                        $rootScope.notify('Oops something went wrong. Please try again later');
+                    }
+                }
+            });
+        }
+    }])
 
 .controller('SignInCtrl', [
   '$scope', '$rootScope', '$firebaseAuth', '$window',
   function ($scope, $rootScope, $firebaseAuth, $window) {
      // check session
-     $rootScope.checkSession();
+     //$rootScope.checkSession();
      $scope.user = {
         email: "",
         password: ""
@@ -182,11 +194,13 @@ angular.module('rember.controllers', [])
       
       $rootScope.$watch('rsvped', function() {
           $scope.rsvped = $rootScope.rsvped;
-      });
+      }); 
+    }])
 
-      
-      
-      
+  .controller('MapCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', function ($scope, $rootScope, $firebase, $ionicModal) {        
+        $scope.openMap = function () {
+            window.open("https://maps.google.com/?q=52.8668007,-1.849777", "_system");
+        }
     }])
 
     .controller('newRsvpCtrl', function($rootScope, $scope, $window, $firebase) {
@@ -204,7 +218,9 @@ angular.module('rember.controllers', [])
             var rsvp  = {
                 name: this.rsvp.name,
                 email: this.rsvp.email,
-                status: this.rsvp.status,
+                status: true,
+                rsvp: this.rsvp.rsvp,
+                request: this.rsvp.request,
                 created: Date.now(),
                 updated: Date.now()
             };
