@@ -18,7 +18,26 @@
     -->
     <preference name="BackupWebStorage" value="none" />
 
+    <gap:plugin name="com.ionic.keyboard" />
+    <gap:plugin name="com.phonegap.plugins.PushPlugin" />
+    <gap:plugin name="org.apache.cordova.console" />
+    <gap:plugin name="org.apache.cordova.device" />
+    <gap:plugin name="org.apache.cordova.inappbrowser" />
+
+    <icon src="../config/android/res/drawable-ldpi/ic_launcher.png"   gap:platform="android"    gap:density="ldpi" />
+    <icon src="../config/android/res/drawable-mdpi/ic_launcher.png"   gap:platform="android"    gap:density="mdpi" />
+    <icon src="../config/android/res/drawable-hdpi/ic_launcher.png"   gap:platform="android"    gap:density="hdpi" />
+    <icon src="../config/android/res/drawable-xhdpi/ic_launcher.png"  gap:platform="android"    gap:density="xhdpi" />
+
     <feature name="StatusBar">
       <param name="ios-package" value="CDVStatusBar" onload="true" />
+    </feature>
+
+    <feature name="PushPlugin">
+        <param name="android-package" value="com.plugin.gcm.PushPlugin" />
+    </feature>
+
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser" />
     </feature>
 </widget>
