@@ -84,3 +84,7 @@ body .list .button-calm {
 .static-map img {
   width: 100%;
 }
+
+img {
+    max-width: 100%;
+}

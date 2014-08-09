@@ -1,0 +1,27 @@
+<ion-header-bar class="bar-dark">
+  <button ng-show="!requested" class="button button-clear" ng-click="doRequest()">Request</button>
+  <h1 class="title">Have your say</h1>
+  <button class="button button-clear" ng-click="logout()">Logout</button>
+</ion-header-bar>
+<ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
+  <div class="card" ng-show="!requested">
+    <div class="item item-text-wrap">
+      <p>It looks like you haven't made any requests yet... Please let us know soon!</p>
+    </div>
+  </div>
+<div class="card" ng-show="requested">
+  <div class="item item-divider">
+    Your song Request
+  </div>
+  <div class="item item-text-wrap">
+    {{request.song}}
+  </div>
+  <div class="item item-divider">
+    Your sandwich filler
+  </div>
+  <div class="item item-text-wrap">
+    {{request.sandwich}}
+  </div>
+</div>
+    
+</ion-content>

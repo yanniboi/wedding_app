@@ -1,0 +1,22 @@
+<div class="modal slide-in-up" ng-controller="newRequestCtrl">
+  <header class="bar bar-header bar-secondary">
+    <button class="button button-clear button-primary" ng-click="close()">Cancel</button>
+    <h1 class="title">Make a Wish</h1>
+    <button class="button button-positive" ng-click="createNew()">Done</button>
+  </header>
+  <ion-content class="padding has-header">
+      <label class="item item-input">
+          <span class="input-label">Name</span>
+          <input type="text" ng-model="request.name">
+      </label>
+      <label class="item item-input">
+          <span class="input-label">What's your song request?</span>
+          <input type="text" ng-model="request.song">
+      </label>
+      <label class="item item-input">
+          <span class="input-label">What's your favorite sandwich filling?</span>
+          <input type="text" ng-model="request.sandwich">
+      </label>     
+      
+  </ion-content>
+</div>

@@ -218,9 +218,9 @@ angular.module('rember.controllers', [])
             var rsvp  = {
                 name: this.rsvp.name,
                 email: this.rsvp.email,
-                status: true,
-                rsvp: this.rsvp.rsvp,
-                request: this.rsvp.request,
+                phone: this.rsvp.phone,
+                dietary: this.rsvp.dietary,
+                status: this.rsvp.status,
                 created: Date.now(),
                 updated: Date.now()
             };
@@ -234,6 +234,64 @@ angular.module('rember.controllers', [])
 
             var bucketListRef = new Firebase($rootScope.baseUrl + 'rsvps');
             $firebase(bucketListRef).$add(rsvp);
+            $rootScope.hide();
+        };
+    })
+
+  .controller('RequestCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', function ($scope, $rootScope, $firebase, $ionicModal) {        
+       $scope.name = window.localStorage['userName']; 
+       $scope.request = {
+           song: $rootScope.requestSong,
+           sandwich: $rootScope.requestSandwich
+       };
+        
+      $ionicModal.fromTemplateUrl('templates/newRequest.html', function(modal) {
+          $scope.newRequest = modal;
+      });
+      
+      $scope.doRequest = function() {
+          $scope.newRequest.show();
+      };
+      
+      $rootScope.$watch('requested', function() {
+          $scope.requested = $rootScope.requested;
+      });
+      
+      $rootScope.$watch('requestSong', function() {
+          $scope.request.song = $rootScope.requestSong;
+      }); 
+      $rootScope.$watch('requestSandwich', function() {
+          $scope.request.sandwich = $rootScope.requestSandwich;
+      });
+
+    }])
+
+    .controller('newRequestCtrl', function($rootScope, $scope, $window, $firebase) {
+        $scope.request = {
+            name: $rootScope.userName
+        };
+
+        $scope.close = function() {
+            $scope.modal.hide();
+        };
+
+        $scope.createNew = function() {
+            var request  = {
+                first_name: this.request.name,
+                song: this.request.song,
+                sandwich: this.request.sandwich
+            };
+            
+            $rootScope.requested = window.localStorage['requested'] = true;
+            $rootScope.requestSong = window.localStorage['requestSong'] = request.song;
+            $rootScope.requestSandwich = window.localStorage['requestSandwich'] = request.sandwich;
+
+            $scope.modal.hide();
+            //$rootScope.show();
+            $rootScope.show("Please wait... Creating new");
+
+            var bucketListRef = new Firebase($rootScope.baseUrl + 'requests');
+            $firebase(bucketListRef).$add(request);
             $rootScope.hide();
         };
     })
@@ -333,6 +391,101 @@ angular.module('rember.controllers', [])
     $rootScope.hide();
   };
 })
+
+    .controller('PhotoStreamCtrl', function($rootScope, $scope, $window, $firebase) {
+        $rootScope.show("Loading pictures...");
+        $scope.list = [];
+
+        var bucketListRef = new Firebase($rootScope.baseUrl + 'photo_stream');
+        var query = bucketListRef.limit(1);
+        query.on('value', function(snapshot) {
+            $scope.list = [];
+            var data = snapshot.val();
+
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    //if (data[key].isCompleted == true) {
+                    data[key].key = key;
+                    $scope.list.push(data[key]);
+                    //}
+                }
+            }
+            if ($scope.list.length == 0) {
+                $scope.noData = true;
+            } else {
+                $scope.noData = false;
+            }
+
+            $rootScope.hide();
+        });
+
+        $scope.doPicture = function () {
+            // Retrieve image file location from specified source
+            navigator.camera.getPicture(
+                uploadPhoto,
+                function(message) {
+                    alert('get picture failed');
+                },
+                {
+                    quality: 10, 
+                    destinationType: navigator.camera.DestinationType.FILE_URI,
+                    sourceType: navigator.camera.PictureSourceType.CAMERA
+                }    
+            );
+        }  
+
+        $scope.uploadPicture = function () {
+            // Retrieve image file location from specified source
+            navigator.camera.getPicture(
+                uploadPhoto,
+                function(message) {
+                    alert('get picture failed');
+                },
+                {
+                    quality: 50, 
+                    destinationType: navigator.camera.DestinationType.FILE_URI,
+                    //sourceType: navigator.camera.PictureSourceType.CAMERA
+                    sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+                    //sourceType: navigator.camera.PictureSourceType.SAVEDPHOTOALBUM
+                }
+            );
+
+        }
+
+        function uploadPhoto(imageURI) {
+            var options = new FileUploadOptions();
+            options.fileKey="file";
+            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+            options.mimeType="image/jpeg";
+
+            var params = new Object();
+            params.value1 = "test";
+            params.value2 = "param";
+
+            var headers = {
+                'fileName': options.fileName
+            }
+
+            options.params = params;
+            options.headers = headers;
+            options.chunkedMode = false;
+
+            var ft = new FileTransfer();
+            //ft.upload(imageURI, "http://192.168.1.70/upload.php", win, fail, options);
+            ft.upload(imageURI, "http://six-gs.com/upload.php", win, fail, options);
+        }
+
+        function win(r) {
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+            alert(r.response);
+        }
+
+        function fail(error) {
+            alert("An error has occurred: Code = " = error.code);
+        }
+    })
 
 .controller('completedCtrl', function($rootScope, $scope, $window, $firebase) {
   $rootScope.show("Please wait... Processing");

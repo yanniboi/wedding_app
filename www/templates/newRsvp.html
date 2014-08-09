@@ -6,15 +6,23 @@
   </header>
   <ion-content class="padding has-header">
       <label class="item item-input">
-          <span class="input-label">Name</span>
+          <span class="input-label">Names</span>
           <input type="text" ng-model="rsvp.name">
       </label>
       <label class="item item-input">
           <span class="input-label">Email</span>
-          <input type="text" ng-model="rsvp.email">
+          <input type="email" ng-model="rsvp.email">
+      </label>
+      <label class="item item-input">
+          <span class="input-label">Telephone</span>
+          <input type="tel" ng-model="rsvp.tel">
+      </label>
+      <label class="item item-input">
+          <span class="input-label">Dietary requirement?</span>
+          <input type="text" ng-model="rsvp.dietary">
       </label>
       <div class="item item-toggle">
-          <span class="input-label">RSVP</span>
+          <span class="input-label">Will you be there?</span>
           <label class="toggle toggle-positive">
               <input type="checkbox" ng-model="rsvp.status">
               <div class="track">
@@ -22,10 +30,6 @@
               </div>
           </label>
       </div>
-      <label class="item item-input">
-          <span class="input-label">I will dance if...</span>
-          <input type="text" ng-model="rsvp.request">
-      </label>
       <div class="rsvp-smiley">
             <img ng-show="rsvp.status" src="img/happy.png" />
             <img ng-show="!rsvp.status" src="img/sad.png" />

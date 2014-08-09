@@ -15,10 +15,15 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
                 StatusBar.styleDefault();
             }
 
+            // Global variables.
             $rootScope.userEmail = window.localStorage['userEmail'];
             $rootScope.userName = window.localStorage['userName'];
             $rootScope.rsvped = window.localStorage['rsvped'];
             $rootScope.rsvpStatus = window.localStorage['rsvpStatus'];
+
+            $rootScope.requested = window.localStorage['requested'];
+            $rootScope.requestSong = window.localStorage['requestSong'];
+            $rootScope.requestSandwich = window.localStorage['requestSandwich'];
 
             $rootScope.baseUrl = 'https://iona-wedding.firebaseio.com/';
             var authRef = new Firebase($rootScope.baseUrl);
@@ -124,23 +129,23 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
                 }
             }
         })
-        .state('bucket.list', {
-            url: '/list',
+        .state('bucket.request', {
+            url: '/request',
             views: {
-                'bucket-list': {
-                    templateUrl: 'templates/bucket-list.html',
-                    controller: 'myListCtrl'
+                'bucket-request': {
+                    templateUrl: 'templates/bucket-request.html',
+                    controller: 'RequestCtrl'
                 }
             }
         })
-        .state('bucket.completed', {
-            url: '/completed',
+        .state('bucket.photo-stream', {
+            url: '/photo-stream',
             views: {
-                'bucket-completed': {
-                    templateUrl: 'templates/bucket-completed.html',
-                    controller: 'completedCtrl'
+                'bucket-photo-stream': {
+                    templateUrl: 'templates/bucket-photo-stream.html',
+                    controller: 'PhotoStreamCtrl'
                 }
             }
         })
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/bucket/photo-stream');
     });
