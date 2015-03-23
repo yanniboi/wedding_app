@@ -18,7 +18,7 @@ h1, h2, h3, h4 {
   color: #000;
   text-align: center;
 
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
 }
 #logo {
@@ -64,13 +64,15 @@ h1, h2, h3, h4 {
 
 
 /* branding */
-.bar-header.bar {
-  border-top-width: 3px;
-  border-top-color: #047319 !important;
+body, body ion-content {
+/*
+    background: rgba(19,0,29,0.6);
+    color: #ffffff !important;
+*/
 }
 
-body {
-  background: url(../img/bg.png) left top repeat;
+.button {
+    background: transparent;
 }
 
 body .list .item {
@@ -87,4 +89,6 @@ body .list .button-calm {
 
 img {
     max-width: 100%;
+    margin: auto;
+    display: block;
 }

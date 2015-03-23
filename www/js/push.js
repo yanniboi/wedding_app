@@ -1,5 +1,5 @@
 //factory for processing push notifications.
-angular.module('rember.pushnotification', [])
+angular.module('wedding.pushnotification', [])
    .factory('PushProcessingService', function($rootScope, $firebase) {
         function onDeviceReady() {
             console.info('NOTIFY  Device is ready.  Registering with GCM server');

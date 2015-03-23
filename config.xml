@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.yanniboi.iona" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.yanniboi.wedding" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Wedding App</name>
     <description>
-        Princess and Mr Pearson
+        Wedding App
     </description>
     <author email="apps@yanniboi.com" href="http://yanniboi.com">
       yanniboi

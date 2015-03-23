@@ -1,10 +1,15 @@
-angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pushnotification'])
+angular.module('wedding', [
+    'ionic',
+    'firebase',
+    'wedding.controllers',
+    //'wedding.pushnotification',
+    'wedding.services'
+])
 
-    .run(function($ionicPlatform, $rootScope, $firebaseAuth, $firebase, $window, $ionicLoading, PushProcessingService) {
+    .run(function($ionicPlatform, $rootScope, $firebaseAuth, $firebase, $window, $ionicLoading) {
         $ionicPlatform.ready(function() {
-            console.log("yanniboi --------- ionic is ready");
             // Initialise push notifications.
-            PushProcessingService.initialize();
+            //PushProcessingService.initialize();
                         
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -19,7 +24,7 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
             $rootScope.userEmail = window.localStorage['userEmail'];
             $rootScope.userName = window.localStorage['userName'];
             $rootScope.rsvped = window.localStorage['rsvped'];
-            $rootScope.rsvpStatus = window.localStorage['rsvpStatus'];
+            $rootScope.rsvpStatus = JSON.parse(window.localStorage.getItem('rsvpStatus'));
 
             $rootScope.requested = window.localStorage['requested'];
             $rootScope.requestSong = window.localStorage['requestSong'];
@@ -47,7 +52,7 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
                 $rootScope.show(text);
                 $window.setTimeout(function() {
                     $rootScope.hide();
-                }, 1999);   
+                }, 999);   
             };
 
             $rootScope.logout = function() {
@@ -83,7 +88,7 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
             //template: 'templates/intro.html',
             controller: 'IntroCtrl'
         })
-        .state('auth', {
+        /*.state('auth', {
             url: "/auth",
             abstract: true,
             templateUrl: "templates/auth.html"
@@ -105,7 +110,7 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
                     controller: 'SignUpCtrl'
                 }
             }
-        })
+        })*/
         .state('bucket', {
             url: "/bucket",
             abstract: true,
@@ -147,5 +152,5 @@ angular.module('rember', ['ionic', 'firebase', 'rember.controllers', 'rember.pus
                 }
             }
         })
-        $urlRouterProvider.otherwise('/bucket/photo-stream');
+        $urlRouterProvider.otherwise('/');
     });

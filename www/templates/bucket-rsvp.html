@@ -1,27 +1,33 @@
 <ion-header-bar class="bar-dark">
-    <button ng-show="!rsvped" class="button button-clear" ng-click="doRsvp()">RSVP</button>
+    <!--<button ng-show="!rsvped" class="button button-positive" ng-click="doRsvp()">RSVP</button>-->
     <h1 class="title">Hello {{name}}</h1>
-    <button class="button button-clear" ng-click="logout()">Logout</button>
+    <!--<button class="button button-clear" ng-click="logout()">Logout</button>-->
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
     <div class="card" >
-        <div class="item item-text-wrap" ng-show="!rsvped">
-            <p>It looks like you haven't RSVP'ed yet... Please let us know soon!</p>
-        </div>
-        <div ng-show="rsvped && rsvpStatus">   
-            <div class="item item-thumbnail-left" href="#">
-                <img src="img/us.jpg">
-                <h2>You are coming!!</h2>
-                <p>We are so looking forward to seeing you.</p>
+        <div ng-show="!rsvped">
+            <div class="item item-text-wrap" >
+                <p>It looks like you haven't RSVP'ed yet... Please let us know soon!</p>
             </div>
-            <div class="item item-image">
-                <img src="img/lego_peeps_date_zoom.jpg">
-            </div>
+            <div class="button button-block button-positive" ng-click="doRsvp()">RSVP NOW</div>
         </div>
-        <div ng-show="rsvped && !rsvpStatus">
-            <div class="item item-thumbnail-left" href="#">
-                <img src="img/niceface.jpg">
-                <h2>You will be missed...</h2>
+        <div ng-show="rsvped">   
+            <div ng-show="rsvpStatus">
+                <div class="item item-thumbnail-left item-text-wrap" href="#">
+                    <img src="img/us.jpg">
+                    <h2>You are coming!!</h2>
+                    <p>We are so looking forward to seeing you.</p>
+                </div>
+                <div class="item item-image">
+                    <img src="img/lego_peeps_date_zoom.jpg">
+                </div>
+            </div>
+            <div ng-show="!rsvpStatus">
+                <div class="item item-thumbnail-left" href="#">
+                    <img src="img/niceface.jpg">
+                    <h2>You will be missed...</h2>
+                </div>
+
             </div>
             <div class="item item-divider">
                 If anything changes...

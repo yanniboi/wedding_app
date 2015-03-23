@@ -15,15 +15,20 @@ $royal:                           #8a6de9 !default;
 $dark:                            #444 !default;
 */
 
-$stable: #285935;
-$positive: #1d8230;
-$calm: #cbcbcb;
-$light: #F0F0F0;
-$dark: #212121;
+/*$stable: #13001D;
+$positive: #AC9F68;
+$calm: #EBE2B5;
+$light: #EBE2B5;
+$dark: #111;*/
+
+$gold: #AC9F68;
+$light-gold: #EBE2B5;
+$peach: #DFC7B6;
+$purple: #13001D;
+
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
-

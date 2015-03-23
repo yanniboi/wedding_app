@@ -1,26 +1,23 @@
-angular.module('rember.controllers', [])
+angular.module('wedding.controllers', [])
     .controller('IntroCtrl', function($scope, $rootScope, $state, $window) {        
         // Called to navigate to the main app
         $scope.startApp = function() {
             var test = $scope;
             if (this.accessCode == '12345') {
-            //$window.location.href = ('#/auth/signup');
-            $state.go('auth.signin');
+            $state.go('bucket.rsvp');
 
             // Set a flag that we finished the tutorial
             window.localStorage['didTutorial'] = true;
             }
             else {
-                $rootScope.notify("Thats not the right code :P ");
+                $rootScope.notify("Thats not the right code. Are you an inposter?");
             }
         };
 
-        //No this is silly
         // Check if the user already did the tutorial and skip it if so
         if(window.localStorage['didTutorial'] === "true") {
             console.log('Skip intro');
-            //$window.location.href = ('#/auth/signin');
-            $state.go('auth.signin');
+            $state.go('bucket.rsvp');
         }
         else{
             setTimeout(function () {
@@ -46,20 +43,18 @@ angular.module('rember.controllers', [])
         ];
 
         // Our initial left buttons
-                $scope.leftButtons = [
-                    {
-                        content: 'Back',
-                        type: 'button icon button-clear ion-chevron-left',
-                        tap: function(e) {
-                            // Move to the previous slide
-                            $scope.$broadcast('slideBox.prevSlide');
-                        }
-                    }
-                ];
+        $scope.leftButtons = [
+            {
+                content: 'Back',
+                type: 'button icon button-clear ion-chevron-left',
+                tap: function(e) {
+                    // Move to the previous slide
+                    $scope.$broadcast('slideBox.prevSlide');
+                }
+            }
+        ];
 
         // Bind the left and right buttons to the scope
-
-        
         $scope.leftButtonShow = false;
         $scope.rightButtonShow = true;
         
@@ -79,7 +74,7 @@ angular.module('rember.controllers', [])
             }
         };
     })
-    .controller('SignUpCtrl', ['$scope', '$rootScope', '$firebaseAuth', '$firebase', 'PushProcessingService', '$window', function ($scope, $rootScope, $firebaseAuth, $firebase, PushProcessingService, $window) {
+    /*.controller('SignUpCtrl', ['$scope', '$rootScope', '$firebaseAuth', '$firebase', 'PushProcessingService', '$window', function ($scope, $rootScope, $firebaseAuth, $firebase, PushProcessingService, $window) {
         $scope.user = {
             email: "",
             password: "",
@@ -175,17 +170,23 @@ angular.module('rember.controllers', [])
         });
      }
   }
-])
+])*/
 
-  .controller('RsvpCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', function ($scope, $rootScope, $firebase, $ionicModal) {        
-       $scope.name = window.localStorage['userName']; 
+  .controller('RsvpCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', 'Internet', function ($scope, $rootScope, $firebase, $ionicModal, Internet) {
+      $scope.name = window.localStorage['userName']; 
         
       $ionicModal.fromTemplateUrl('templates/newRsvp.html', function(modal) {
           $scope.newRsvp = modal;
       });
       
       $scope.doRsvp = function() {
-          $scope.newRsvp.show();
+          var online = Internet.check();
+          if (online) {
+              $scope.newRsvp.show();
+          }
+          else {
+              Internet.notify();
+          }
       };
       
       $rootScope.$watch('rsvpStatus', function() {
@@ -198,9 +199,12 @@ angular.module('rember.controllers', [])
     }])
 
   .controller('MapCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', function ($scope, $rootScope, $firebase, $ionicModal) {        
-        $scope.openMap = function () {
-            window.open("https://maps.google.com/?q=52.8668007,-1.849777", "_system");
-        }
+        $scope.openMapLowry = function () {
+            window.open("https://maps.google.com/?q=53.470905, -2.295800", "_system");
+        };
+        $scope.openMapIvy = function () {
+            window.open("https://maps.google.com/?q=53.419262, -2.237238", "_system");
+        };
     }])
 
     .controller('newRsvpCtrl', function($rootScope, $scope, $window, $firebase) {
@@ -238,7 +242,7 @@ angular.module('rember.controllers', [])
         };
     })
 
-  .controller('RequestCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', function ($scope, $rootScope, $firebase, $ionicModal) {        
+  .controller('RequestCtrl', ['$scope', '$rootScope', '$firebase', '$ionicModal', 'Internet', function ($scope, $rootScope, $firebase, $ionicModal, Internet) {        
        $scope.name = window.localStorage['userName']; 
        $scope.request = {
            song: $rootScope.requestSong,
@@ -250,7 +254,12 @@ angular.module('rember.controllers', [])
       });
       
       $scope.doRequest = function() {
-          $scope.newRequest.show();
+          if (Internet.check()) {
+              $scope.newRequest.show();
+          }
+          else {
+              Internet.notify();
+          }
       };
       
       $rootScope.$watch('requested', function() {
@@ -392,7 +401,14 @@ angular.module('rember.controllers', [])
   };
 })
 
-    .controller('PhotoStreamCtrl', function($rootScope, $scope, $window, $firebase) {
+    .controller('PhotoStreamCtrl', function($rootScope, $scope, $window, $firebase, $state, Internet) {
+        if (!Internet.check()) {
+            Internet.notify();
+            setTimeout(function(){$state.go('bucket.rsvp')}, 1000);
+            return;
+
+        }
+
         $rootScope.show("Loading pictures...");
         $scope.list = [];
 
@@ -427,7 +443,7 @@ angular.module('rember.controllers', [])
                     alert('get picture failed');
                 },
                 {
-                    quality: 10, 
+                    quality: 75,
                     destinationType: navigator.camera.DestinationType.FILE_URI,
                     sourceType: navigator.camera.PictureSourceType.CAMERA
                 }    
@@ -444,7 +460,6 @@ angular.module('rember.controllers', [])
                 {
                     quality: 50, 
                     destinationType: navigator.camera.DestinationType.FILE_URI,
-                    //sourceType: navigator.camera.PictureSourceType.CAMERA
                     sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
                     //sourceType: navigator.camera.PictureSourceType.SAVEDPHOTOALBUM
                 }
@@ -453,37 +468,32 @@ angular.module('rember.controllers', [])
         }
 
         function uploadPhoto(imageURI) {
-            var options = new FileUploadOptions();
-            options.fileKey="file";
-            options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-            options.mimeType="image/jpeg";
-
-            var params = new Object();
-            params.value1 = "test";
-            params.value2 = "param";
-
-            var headers = {
-                'fileName': options.fileName
-            }
-
-            options.params = params;
-            options.headers = headers;
-            options.chunkedMode = false;
-
-            var ft = new FileTransfer();
-            //ft.upload(imageURI, "http://192.168.1.70/upload.php", win, fail, options);
-            ft.upload(imageURI, "http://six-gs.com/upload.php", win, fail, options);
+            window.resolveLocalFileSystemURI(imageURI, function(fileEntry){
+                fileEntry.file(function(fileObj) {
+                    //if(fileObj.size < 1048576){
+                        var fileName = fileObj.fullPath;
+                        var options = new FileUploadOptions();
+                        options.fileKey = "ReferenceName";
+                        options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+                        options.mimeType="image/jpeg";
+                        options.chunkedMode = false;
+                        var ft = new FileTransfer();
+                        ft.upload(fileName, "http://wedding.yanandcat.co.uk/upload", win, fail, options);
+                    //}
+                });
+            });
         }
 
         function win(r) {
             console.log("Code = " + r.responseCode);
             console.log("Response = " + r.response);
             console.log("Sent = " + r.bytesSent);
-            alert(r.response);
+            $rootScope.notify("Upload successful!");
         }
 
         function fail(error) {
-            alert("An error has occurred: Code = " = error.code);
+            $rootScope.notify("A error has occurred: Code = " + error.code);
+            console.log("An error has occurred: Code = " + error.code);
         }
     })
 

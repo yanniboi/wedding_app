@@ -1,6 +1,14 @@
 {
-  "name": "rember",
-  "email": "",
-  "app_id": "",
-  "package_name": ""
+  "name": "wedding",
+  "email": "apps@yanniboi.com",
+  "app_id": "185fc0da",
+  "package_name": "wedding_app",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
 }
