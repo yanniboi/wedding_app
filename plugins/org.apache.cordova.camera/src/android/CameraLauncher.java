@@ -314,8 +314,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
           cropIntent.putExtra("aspectX", 1);
           cropIntent.putExtra("aspectY", 1);
       }
-      // retrieve data on return
-      cropIntent.putExtra("return-data", true);
+      // create new file handle to get full resolution crop
+      croppedUri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
+      cropIntent.putExtra("output", croppedUri);
+
       // start the activity - we handle returning in onActivityResult
 
       if (this.cordova != null) {
@@ -343,6 +345,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         try {
             if (this.encodingType == JPEG) {
                 exif.createInFile(getTempDirectoryPath() + "/.Pic.jpg");
+                exif.readExifData();
+                rotate = exif.getOrientation();
+            } else if (this.encodingType == PNG) {
+                exif.createInFile(getTempDirectoryPath() + "/.Pic.png");
                 exif.readExifData();
                 rotate = exif.getOrientation();
             }
@@ -380,14 +386,19 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         else if (destType == FILE_URI || destType == NATIVE_URI) {
             if (this.saveToPhotoAlbum) {
                 Uri inputUri = getUriFromMediaStore();
-                //Just because we have a media URI doesn't mean we have a real file, we need to make it
-                uri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
+                try {
+                    //Just because we have a media URI doesn't mean we have a real file, we need to make it
+                    uri = Uri.fromFile(new File(FileHelper.getRealPath(inputUri, this.cordova)));
+                } catch (NullPointerException e) {
+                    uri = null;
+                }
             } else {
                 uri = Uri.fromFile(new File(getTempDirectoryPath(), System.currentTimeMillis() + ".jpg"));
             }
 
             if (uri == null) {
                 this.failPicture("Error capturing image - no media storage found.");
+                return;
             }
 
             // If all this is true we shouldn't compress the image.
@@ -420,14 +431,14 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     exif.writeExifData();
                 }
                 if (this.allowEdit) {
-          performCrop(uri);
-        } else {
-          // Send Uri back to JavaScript for viewing image
-          this.callbackContext.success(uri.toString());
-        }
+                    performCrop(uri);
+                } else {
+                    // Send Uri back to JavaScript for viewing image
+                    this.callbackContext.success(uri.toString());
+                }
             }
-            // Send Uri back to JavaScript for viewing image
-            this.callbackContext.success(uri.toString());
+        } else {
+            throw new IllegalStateException();
         }
 
         this.cleanup(FILE_URI, this.imageUri, uri, bitmap);
@@ -575,36 +586,11 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         // if camera crop
     if (requestCode == CROP_CAMERA) {
       if (resultCode == Activity.RESULT_OK) {
-        // // get the returned data
-        Bundle extras = intent.getExtras();
-        // get the cropped bitmap
-        Bitmap thePic = extras.getParcelable("data");
-                                if (thePic == null) {
-                                    this.failPicture("Crop returned no data.");
-                                    return;
-                                }
-
-        // now save the bitmap to a file
-        OutputStream fOut = null;
-        File temp_file = new File(getTempDirectoryPath(),
-            System.currentTimeMillis() + ".jpg");
-        try {
-          temp_file.createNewFile();
-          fOut = new FileOutputStream(temp_file);
-          thePic.compress(Bitmap.CompressFormat.JPEG, this.mQuality,
-              fOut);
-          fOut.flush();
-          fOut.close();
-        } catch (FileNotFoundException e) {
-          e.printStackTrace();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-
         // // Send Uri back to JavaScript for viewing image
         this.callbackContext
-            .success(Uri.fromFile(temp_file).toString());
-
+            .success(croppedUri.toString());
+        croppedUri = null;
+        
       }// If cancelled
       else if (resultCode == Activity.RESULT_CANCELED) {
         this.failPicture("Camera cancelled.");
@@ -641,7 +627,7 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
 
         // If retrieving photo from library
         else if ((srcType == PHOTOLIBRARY) || (srcType == SAVEDPHOTOALBUM)) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && intent != null) {
                 this.processResultFromGallery(destType, intent);
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
@@ -735,11 +721,11 @@ private String ouputModifiedBitmap(Bitmap bitmap, Uri uri) throws IOException {
         Uri uri;
         try {
             uri = this.cordova.getActivity().getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        } catch (UnsupportedOperationException e) {
+        } catch (RuntimeException e) {
             LOG.d(LOG_TAG, "Can't write to external media storage.");
             try {
                 uri = this.cordova.getActivity().getContentResolver().insert(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
-            } catch (UnsupportedOperationException ex) {
+            } catch (RuntimeException ex) {
                 LOG.d(LOG_TAG, "Can't write to internal media storage.");
                 return null;
             }
