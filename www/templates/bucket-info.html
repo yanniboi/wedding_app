@@ -1,0 +1,78 @@
+<ion-header-bar class="bar-dark">
+    <div class="buttons">
+        <button ng-click= "leftButtons[0].tap()" class="button {{leftButtons[0].type}}">
+            {{leftButtons[0].content}}
+        </button>
+        <h1 class="title">Information</h1>
+
+
+        <button ng-click= "rightButtons[0].tap()" class="button {{rightButtons[0].type}}">
+            {{rightButtons[0].content}}
+        </button>
+    </div>
+</ion-header-bar>
+<ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
+    <ion-slide-box  auto-play="false" show-pager="false" on-slide-changed="slideChanged(index)">
+
+        <!-- Slide 1 -->
+        <ion-slide class="padding">
+            <div class="list">
+
+                <div class="item item-avatar">
+                    <img src="newwimge.jpg">
+                    <h2>Parking</h2>
+                    <p>Park at the Lowry Outlet Mall</p>
+                </div>
+
+                <div class="item item-text-wrap">
+                    The lowry has a lot of space and there are tokens available behind the bar for a reduced parking cost.
+                </div>
+
+                <div class="item item-icon-left" href="#">
+                    <i class="icon ion-cash"></i>
+                    £5.00
+                </div>
+                <div class="item item-icon-left" href="#">
+                    <i class="icon ion-ios-location"></i>
+                    Pier 8 - Salford Quays - M50 3AZ
+                </div>
+                <a href="http://lowry-mall.com" class="item item-icon-left">
+                    <i class="icon ion-mouse"></i>
+                    More info on website
+                </a>
+
+            </div>
+        </ion-slide>
+
+        <!-- Slide 2 -->
+        <ion-slide class="padding">
+            <div class="list">
+
+                <div class="item item-avatar">
+                    <img src="newwimge.jpg">
+                    <h2>The Tram (Metrolink)</h2>
+                    <p>The Lowry is in Media City</p>
+                </div>
+
+                <div class="item item-text-wrap">
+                    The Lowry is in Media City, accessible by tram on the <em>Blah</em> and <em>Blah</em> lines
+                </div>
+
+                <a class="item item-icon-left" href="#">
+                    <i class="icon ion-cash"></i>
+                    £2 - £4
+                </a>
+                <a href="http://manchester-trams.com" class="item item-icon-left">
+                    <i class="icon ion-mouse"></i>
+                    More info on website
+                </a>
+
+            </div>
+        </ion-slide>
+
+
+
+    </ion-slide-box>
+
+
+</ion-content>

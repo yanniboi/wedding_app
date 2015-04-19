@@ -1,18 +1,32 @@
 <ion-header-bar class="bar-dark">
-  <h1 class="title">Completed Items</h1>
-  <!--<button class="button button-clear" ng-click="logout()">Logout</button>-->
+    <h1 class="title">Completed Items</h1>
+    <!--<button class="button button-clear" ng-click="logout()">Logout</button>-->
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
-  <div class="card" ng-repeat="item in list" >
-    <div class="item item-text-wrap">
-        <img src="http://six-gs.com/upload/{{item.fileName}}"  />
+    <!--<div class="card" ng-repeat="item in list" >
+        <div class="item item-text-wrap">
+            <img src="http://wedding.yanandcat.co.uk/sites/default/files/{{item.fileName}}.jpg"  />
+        </div>
+    </div>-->
+
+    <div class="card" >
+        <div class="item item-text-wrap" ng-show="noData">
+            Quick! Be the first person to take a picture!
+        </div>
+        <div ng-click="doPicture()" class="item button button-block button-light">Take Picture</div>
+        <div ng-click="uploadPicture()" class="item button button-block button-light">Upload Picture</div>
     </div>
-  </div>
-  <div class="card" >
-    <div class="item item-text-wrap" ng-show="noData">
-      Quick! Be the first person to take a picture!
-    </div>
-    <div ng-click="doPicture()" class="item button button-block button-light">Take Picture</div>
-    <div ng-click="uploadPicture()" class="item button button-block button-light">Upload Picture</div>
-  </div>
+
+    <td-cards>
+        <td-card ng-repeat="image in list" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)" on-partial-swipe="cardPartialSwipe(amt)" class="card-{{$index}}">
+            <div class="image" ng-controller="CardCtrl">
+                <div class="no-text">NOPE</div>
+                <img ng-src="http://wedding.yanandcat.co.uk/sites/default/files/styles/tinder/public/{{image.filename}}">
+                <div class="yes-text">LIKE</div>
+            </div>
+        </td-card>
+    </td-cards>
+
+    <!--<slider images="list"></slider>-->
+
 </ion-content>

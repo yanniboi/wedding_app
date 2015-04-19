@@ -1,0 +1,5 @@
+<div on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()"class="slideshow">
+    <div class="slide" ng-repeat="image in images" ng-show="image.visible">
+        <img ng-src="http://dev-yanandcat.pantheon.io/sites/default/files/{{image.filename}}"/>
+    </div>
+</div>

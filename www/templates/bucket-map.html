@@ -1,11 +1,11 @@
 <ion-header-bar class="bar-dark">
-  <h1 class="title">Directions to the Venue</h1>
-  <!--<button class="button button-clear" ng-click="logout()">Logout</button>-->
+    <h1 class="title">Directions to the Venue</h1>
+    <!--<button class="button button-clear" ng-click="logout()">Logout</button>-->
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
-  <!--<div class="static-map">
-    <img src="http://maps.googleapis.com/maps/api/staticmap?center=52.88,-1.849&zoom=12&size=400x400&markers=label:S|color:green|52.8668007,-1.849777">
-  </div>-->
+    <!--<div class="static-map">
+      <img src="http://maps.googleapis.com/maps/api/staticmap?center=52.88,-1.849&zoom=12&size=400x400&markers=label:S|color:green|52.8668007,-1.849777">
+    </div>-->
     <div class="card">
         <div class="item item-text-wrap">
             <h2>Ivy Church Didsbury</h2>
@@ -13,15 +13,21 @@
             <img src="img/ivy.jpg"/>
             </br>            <p>Ivy Church is on Barlow Moore Road in South Manchester</p>
         </div>
-            <div class="item item-icon-left item-text-wrap">
-                <i class="icon ion-ios7-location"></i>
-                <p>97 Barlow Moor Road - Didsbury - M20 2GP</p>
-            </div>
-            <div class="item item-icon-left">
-                <i class="icon ion-ios7-telephone"></i>
-                <p>Tel: 01889 562083</p>
-            </div>
-        <div class="button button-block button-positive" ng-click="openMapIvy()">Get Directions</div>
+        <div class="item item-icon-left item-text-wrap">
+            <i class="icon ion-ios-location"></i>
+            <p>97 Barlow Moor Road - Didsbury - M20 2GP</p>
+        </div>
+        <div class="item item-icon-left">
+            <i class="icon ion-ios-telephone"></i>
+            <p>Tel: 01889 562083</p>
+        </div>
+        <div class="item item-icon-left">
+            <i class="icon ion-clock"></i>
+            <p>3PM (to be confirmed)</p>
+        </div>
+        <div class="item padding">
+            <div class="button button-block button-positive" ng-click="openMapIvy()">Get Directions</div>
+        </div>
 
     </div>
 
@@ -34,15 +40,25 @@
             <p>The Lowry is in the Heart of Salford Quays near Media City</p>
         </div>
         <div class="item item-icon-left item-text-wrap">
-            <i class="icon ion-ios7-location"></i>
+            <i class="icon ion-ios-location"></i>
             <p>Pier 8 - Salford Quays - M50 3AZ</p>
         </div>
         <div class="item item-icon-left">
-            <i class="icon ion-ios7-telephone"></i>
+            <i class="icon ion-ios-telephone"></i>
             <p>Tel: 01889 562083</p>
         </div>
-        <div class="button button-block button-positive" ng-click="openMapLowry()">Get Directions</div>
+        <div class="item item-icon-left">
+            <i class="icon ion-clock"></i>
+            <p>Meal - 5PM (to be confirmed)</p>
+        </div>
+        <div class="item item-icon-left">
+            <i class="icon ion-clock"></i>
+            <p>Party - 7PM (to be confirmed)</p>
+        </div>
+        <div class="item padding">
+            <div class="button button-block button-positive" ng-click="openMapLowry()">Get Directions</div>
+        </div>
 
     </div>
-    
+
 </ion-content>
